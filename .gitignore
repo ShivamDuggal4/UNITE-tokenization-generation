@@ -1,0 +1,10 @@
+__pycache__
+output*
+wandb
+*.pth
+*.ckpt
+datasets
+*.pt
+*.npz
+*.caches*
+*.lock

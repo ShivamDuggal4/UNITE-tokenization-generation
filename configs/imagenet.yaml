@@ -1,0 +1,57 @@
+# Baseline config: 1 node × 8 GPU, effective batch 1024 via grad_accum=2
+training:
+  epochs: 600
+  global_seed: 0
+  ema_decay: 0.9978
+  total_batch_size: 1024
+  grad_accum_steps: 2
+  num_workers: 8
+  clip_grad: 3.0
+  log_interval: 20
+  checkpoint_interval: 2000
+  max_keep_checkpoints: 3
+  fid_epoch: 40
+  fid_sweep_epoch: 120
+  fid_start_epoch: 40
+  rfid_epoch: 40
+  eval_batch_size: 16
+  precision: "bf16"
+  torch_compile_decoder: true
+  optimizer:
+    lr: 1.0e-4
+    betas: [0.9, 0.999]
+    weight_decay: 0.0
+    muon_weight_decay: 0.0
+    muon_adjust_lr_fn: match_rms_adamw
+  scheduler:
+    type: cosine
+    warmup_epochs: 20
+    warmup_1_epochs: 30
+    decay_end_1_epochs: 50
+    warmup_2_epochs: 3000
+    decay_end_2_epochs: 380
+    base_lr_1: 1.0e-4
+    base_lr_2: 5.0e-5
+    final_lr: 1.0e-5
+
+gen_tok:
+  diffusion_input_dim: 32
+  encoder_model_size: "Base" # [Base, Medium, Large, XL]
+  decoder_model_size: "Base" # [Small, Base, Large]
+  patch_size: 16
+  flow_steps_per_recon: 3
+  flow_mini_batch: 3
+  timestep_shift_mode: "manual"
+  timestep_shift_alpha: 0.5
+  timestep_shift_base_dim: 4096
+  timestep_shift_effective_dim_mode: "total"
+  modulation_recon_timestep_max: 0.01
+  noising_t_start: 0.7
+  lognorm_mu: 0.0
+  lognorm_sigma: 1.0
+  in_content_len: 32
+  in_content_start: 4
+  use_qknorm_encoder: true
+  loss:
+    perceptual_weight: 1.0
+    gen_loss_weight: 1.0
